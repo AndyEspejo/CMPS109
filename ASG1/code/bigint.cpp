@@ -1,4 +1,4 @@
-// $Id: bigint.cpp,v 1.74 2016-03-24 19:30:57-07 - - $
+// $Id: bigint.cpp,v 1.73 2015-07-03 14:46:41-07 - - $
 
 #include <cstdlib>
 #include <exception>
@@ -23,16 +23,27 @@ bigint::bigint (const string& that) {
    uvalue = ubigint (that.substr (is_negative ? 1 : 0));
 }
 
-bigint bigint::operator+ () const {
+bigint bigint::operator+() const {
    return *this;
 }
 
-bigint bigint::operator- () const {
+bigint bigint::operator-() const {
    return {uvalue, not is_negative};
 }
 
+//worked on this, checking if its negative then does needed operations
 bigint bigint::operator+ (const bigint& that) const {
-   ubigint result = uvalue + that.uvalue;
+   ubigint result = 0;
+   if(is_negative == that.is_negative){
+   	result = uvalue + that.uvalue;
+   	return {result, is_negative};
+   } else {
+   	if(uvalue > that.uvalue){
+   		result = uvalue - that.uvalue;
+   	} else {
+   		result = that.uvalue - uvalue;
+   	}
+   }
    return result;
 }
 
@@ -46,6 +57,7 @@ bigint bigint::operator* (const bigint& that) const {
    return result;
 }
 
+
 bigint bigint::operator/ (const bigint& that) const {
    bigint result = uvalue / that.uvalue;
    return result;
