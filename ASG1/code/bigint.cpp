@@ -34,22 +34,44 @@ bigint bigint::operator-() const {
 //worked on this, checking if its negative then does needed operations
 bigint bigint::operator+ (const bigint& that) const {
    ubigint result = 0;
+   //If they are the same sign, just add and keep sign
    if(is_negative == that.is_negative){
    	result = uvalue + that.uvalue;
    	return {result, is_negative};
-   } else {
-   	if(uvalue > that.uvalue){
-   		result = uvalue - that.uvalue;
-   	} else {
-   		result = that.uvalue - uvalue;
+
+	//else, use sign of the bigger value
+	}else if(uvalue > that.uvalue){
+   	result = uvalue - that.uvalue;
+	return {result, is_negative}
+	
+	}else{
+	result = that.uvalue - uvalue;
+	return {result, that.is_negative}
    	}
-   }
-   return result;
 }
+   
+
 
 bigint bigint::operator- (const bigint& that) const {
-   ubigint result = uvalue - that.uvalue;
-   return result;
+   ubigint result = 0;
+   //If they are the same sign, check which is bigger
+   if (is_negative == that.is_negative){
+	   if(uvalue > that.uvalue){
+		   result = uvalue - that.uvalue;
+		   return {result, !is_negative};
+		   
+		}else{
+			result = that.uvalue - uvalue;
+			return{result, that.is_negative};
+		}
+	//Else just add and make negative
+   }else{
+		result = uvalue + that.uvalue;
+		return{result, is_negative};
+   }
+	   
+	   
+	   
 }
 
 bigint bigint::operator* (const bigint& that) const {
