@@ -91,7 +91,10 @@ bigint bigint::operator% (const bigint& that) const {
 }
 
 bool bigint::operator== (const bigint& that) const {
-   return is_negative == that.is_negative and uvalue == that.uvalue;
+   if(is_negative == that.is_negative && uvalue == that.uvalue){
+	   return true;
+   }
+   return false;
 }
 
 bool bigint::operator< (const bigint& that) const {

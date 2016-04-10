@@ -21,43 +21,66 @@ ubigint::ubigint (const string& that): ubig_value(0) {
 
 ubigint ubigint::operator+ (const ubigint& that) const {
    ubigint result;
+   size_t size_of_result;
    int carry = 0;
    int sum = 0;
+   
    //Gets size of biggest to make sure all digits are added
    if(ubig_value.size() > that.ubig_value.size()){
-	   size_t size_of_result = ubig_value.size();
+	    size_of_result = ubig_value.size();
    }else{
-	   size_t size_of_result = that.ubig_value.size();
+	    size_of_result = that.ubig_value.size();
    }
    //Actual implementation for adding
    for(size_t i = 0; i < size_of_result; i++){
 	 sum = carry;
 	 if(i < ubig_value.size()){
-		 sum = sum + ubig_value.at(i)
+		 sum = sum + ubig_value.at(i);
 	 }
 	 if(i < that.ubig_value.size()){
 		 sum = sum + that.ubig_value.at(i);
 	 }
 	 if(sum > 10){
 		 carry = 1;
-		 result.push_back(sum-10);
+		 result.ubig_value.push_back(sum-10);
 	 }else{
-		 result.push_back(sum);
+		 result.ubig_value.push_back(sum);
 	 }
    }
    //Add code to get rid of leading zeros
-	return result
+	return result;
 
 }
 
 ubigint ubigint::operator- (const ubigint& that) const {
    if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
-   return ubigint (uvalue - that.uvalue);
+   ubigint result;
+   size_t size_of_result;
+   int diff = 0;
+   int carry = 0;
+   //Gets size of biggest to make sure all digits are subtracted
+   if(ubig_value.size() > that.ubig_value.size()){
+	   size_of_result = ubig_value.size();
+   }else{
+	   size_of_result = that.ubig_value.size();
+   }
+   //Actual implementation of subtrction
+   for(size_t i = 0; i < size_of_result;i++){
+	   diff = ubig_value.at(i) - that.ubig_value.at(i) - carry;
+	   if(diff < 0){
+		   diff = diff + 10;
+		   carry = 1;
+	   }else{
+		   carry = 0;
+	   }
+	   result.ubig_value.push_back(diff);
+   }
+	return result;
 }
-
-ubigint ubigint::operator* (const ubigint& that) const {
-   return ubigint (uvalue * that.uvalue);
-}
+/*
+//ubigint ubigint::operator* (const ubigint& that) const {
+   
+//}
 
 void ubigint::multiply_by_2() {
    uvalue *= 2;
@@ -68,7 +91,7 @@ void ubigint::divide_by_2() {
 }
 
 
-struct quo_rem { ubigint quotient; ubigint remainder; };
+/*struct quo_rem { ubigint quotient; ubigint remainder; };
 quo_rem udivide (const ubigint& dividend, ubigint divisor) {
    // Note: divisor is modified so pass by value (copy).
    ubigint zero {0};
@@ -89,20 +112,29 @@ quo_rem udivide (const ubigint& dividend, ubigint divisor) {
       power_of_2.divide_by_2();
    }
    return {.quotient = quotient, .remainder = remainder};
-}
+} 
 
-ubigint ubigint::operator/ (const ubigint& that) const {
+//ubigint ubigint::operator/ (const ubigint& that) const {
    return udivide (*this, that).quotient;
-}
+//}
 
-ubigint ubigint::operator% (const ubigint& that) const {
-   return udivide (*this, that).remainder;
-}
-
+//ubigint ubigint::operator% (const ubigint& that) const {
+ //  return udivide (*this, that).remainder;
+//}
+*/
 bool ubigint::operator== (const ubigint& that) const {
-   return uvalue == that.uvalue;
+   if(ubig_value.size() == that.ubig_value.size()){
+	   for(size_t i = 0; i < ubig_value.size();i++){
+		   if(ubig_value.at(i) != ubig_value.at(i)){
+			   return false;
+		   }
+		return true;
+	   }
+	   
+   }
+   return false;
 }
-
+/*
 bool ubigint::operator< (const ubigint& that) const {
    return uvalue < that.uvalue;
 }
@@ -110,4 +142,4 @@ bool ubigint::operator< (const ubigint& that) const {
 ostream& operator<< (ostream& out, const ubigint& that) { 
    return out << "ubigint(" << that.uvalue << ")";
 }
-
+*/
