@@ -42,11 +42,11 @@ bigint bigint::operator+ (const bigint& that) const {
 	//else, use sign of the bigger value
 	}else if(uvalue > that.uvalue){
    	result = uvalue - that.uvalue;
-	return {result, is_negative}
+	return {result, is_negative};
 	
 	}else{
 	result = that.uvalue - uvalue;
-	return {result, that.is_negative}
+	return {result, that.is_negative};
    	}
 }
    
