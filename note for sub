@@ -1,0 +1,30 @@
+ubigint ubigint::operator- (const ubigint& that) const {
+   if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
+   ubigint result;
+   int diff = 0;
+   int carry = 0;
+   //Gets size of biggest to make sure all digits are subtracted
+   size_t size_of_result = ubig_value.size();
+   
+   //Actual implementation of subtrction
+	for(size_t i = 0; i < size_of_result; i++){
+		diff = ubig_value.at(i) - carry - '0';
+		if(i < that.ubig_value.size()){
+			diff = diff - that.ubig_value.at(i) - '0';
+		}
+		if(diff < 0){
+			carry = -1;
+			result.ubig_value.push_back((diff + 10  + '0'));
+		}else{
+			carry = 0;
+			result.ubig_value.push_back((diff  + '0'));
+		}
+		
+	}
+   if(result.ubig_value.size() > 0){
+	   while(result.ubig_value.back() == (0 + '0')){
+		   result.ubig_value.pop_back();
+	   }
+   }
+	return result;
+}
