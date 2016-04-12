@@ -54,21 +54,18 @@ bigint bigint::operator+ (const bigint& that) const {
 
 bigint bigint::operator- (const bigint& that) const {
    ubigint result = 0;
-   //If they are the same sign, check which is bigger
-   if (is_negative == that.is_negative){
-	   if(uvalue > that.uvalue){
-		   result = uvalue - that.uvalue;
-		   return {result, !is_negative};
-		   
-		}else{
-			result = that.uvalue - uvalue;
-			return{result, that.is_negative};
-		}
-	//Else just add and make negative
-   }else{
-		result = uvalue + that.uvalue;
-		return{result, is_negative};
+   //If they are the different signs, just add and make negative
+   if(is_negative != that.is_negative){
+      result = uvalue + that.uvalue;
+      return {result, true};
+   }else if(uvalue > that.uvalue){
+      result = uvalue - that.uvalue;
+      return {result, is_negative};
+   }else if(that.uvalue > uvalue){
+      result = that.uvalue - uvalue;
+      return {result, that.is_negative};
    }
+      
 	   
 	   
 	   
@@ -110,7 +107,7 @@ bool bigint::operator< (const bigint& that) const {
 }
 
 ostream& operator<< (ostream& out, const bigint& that) {
-   return out << "bigint(" << (that.is_negative ? "'-'" : "'+'")
-              << that.uvalue << ")";
+   return out << (that.is_negative ? "-" : "+")
+              << that.uvalue;
 }
 

@@ -26,12 +26,11 @@ ubigint ubigint::operator+ (const ubigint& that) const {
    size_t size_of_result;
    int carry = 0;
    int sum = 0;
-   
    //Gets size of biggest to make sure all digits are added
    if(ubig_value.size() > that.ubig_value.size()){
-	    size_of_result = ubig_value.size();
+	    size_of_result = ubig_value.size() + 1;
    }else{
-	    size_of_result = that.ubig_value.size();
+	    size_of_result = that.ubig_value.size() + 1;
    }
    //Actual implementation for adding
    for(size_t i = 0; i < size_of_result; i++){
@@ -62,28 +61,26 @@ ubigint ubigint::operator+ (const ubigint& that) const {
 ubigint ubigint::operator- (const ubigint& that) const {
    if (*this < that) throw domain_error ("ubigint::operator-(a<b)");
    ubigint result;
-   size_t size_of_result;
    int diff = 0;
    int carry = 0;
    //Gets size of biggest to make sure all digits are subtracted
-	size_of_result = ubig_value.size();
+   size_t size_of_result = ubig_value.size();
    
    //Actual implementation of subtrction
-   for(size_t i = 0; i < size_of_result; i++){
-	   if(i < that.ubig_value.size()){
-			diff = ubig_value.at(i) - that.ubig_value.at(i) - '0' - carry  ;
-			if(diff < 0){
-				diff = diff + 10 - '0';
-				carry = 1;
-			}else{
-				carry = 0;
-			}
-	   }else{
-		   diff = ubig_value.at(i) - '0' - carry  ;
-		   carry = 0;
-	   }
-	   result.ubig_value.push_back(diff  + '0');
-   }
+	for(size_t i = 0; i < size_of_result; i++){
+		diff = ubig_value.at(i) - carry - '0';
+		if(i < that.ubig_value.size()){
+			diff = diff - that.ubig_value.at(i) - '0';
+		}
+		if(diff < 0){
+			carry = -1;
+			result.ubig_value.push_back((diff + 10  + '0'));
+		}else{
+			carry = 0;
+			result.ubig_value.push_back((diff  + '0'));
+		}
+		
+	}
    if(result.ubig_value.size() > 0){
 	   while(result.ubig_value.back() == (0 + '0')){
 		   result.ubig_value.pop_back();
@@ -162,7 +159,7 @@ bool ubigint::operator< (const ubigint& that) const {
    if(ubig_value.size() != that.ubig_value.size()){
 	   return ubig_value.size() > that.ubig_value.size();
    }else{
-	   for(size_t i = ubig_value.size() - 1; i >= 0; --i){
+	   for(size_t i = ubig_value.size() - 1 ; i >= 1; --i){
 		   if(ubig_value.at(i) > that.ubig_value.at(i)){
 			   return false;
 		   }
