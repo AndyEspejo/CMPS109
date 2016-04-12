@@ -69,7 +69,7 @@ ubigint ubigint::operator- (const ubigint& that) const {
    //Actual implementation of subtrction
 	for(size_t i = 0; i < size_of_result; i++){
 		diff = ubig_value.at(i) - carry - '0';
-		if(i < that.ubig_value.size()){
+		if(i <= that.ubig_value.size()){
 			diff = diff - that.ubig_value.at(i) - '0';
 		}
 		if(diff < 0){
@@ -92,10 +92,28 @@ ubigint ubigint::operator- (const ubigint& that) const {
 
 ubigint ubigint::operator* (const ubigint& that) const {
 	ubigint result = 0;
-	size_t size_of_result = ubig_value.size() + that.ubig_value.size();
+	size_t m = ubig_value.size();
+	size_t n = that.ubig_value.size();
+	size_t size_of_result = m + n;
+	int partial;
 	int carry;
-	for(size_t i = 0; i < ubig_value.size(); i++){
-		
+	for(size_t s = 0; s < size_of_result + 1; s++){
+	   result.ubig_value.push_back(0 + '0');
+	}
+	for(size_t i = 0; i < m  ; i++){
+	   carry = 0;
+	   for(size_t j = 0; j < n ; j++){
+	      int temp_mult = ubig_value.at(i) * that.ubig_value.at(j) - '0';
+	      partial = result.ubig_value.at(i+j) + temp_mult + carry - '0';
+	      result.ubig_value.push_back((partial%10) + '0');
+	      carry = partial/10;
+	   }
+	   result.ubig_value.at(i+n) = carry - '0';
+   if(result.ubig_value.size() > 0){
+	   while(result.ubig_value.back() == (0 + '0')){
+		   result.ubig_value.pop_back();
+	   }
+   }
 	}
 	return result;
 	
