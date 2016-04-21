@@ -47,10 +47,10 @@ void fn_cd (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
    if(words.size() == 1){
-      //set current directory to root directory
+      //Set current directory to root directory
       cout << "cd = root";
    }else if(words.size() == 2){
-      //set current directory to words[1]
+      //Set current directory to words[1]
       cout << "words";
    }
       
@@ -72,6 +72,13 @@ void fn_exit (inode_state& state, const wordvec& words){
 void fn_ls (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if(words.size() == 1){
+      //List files in current directory
+      cout << "printing current directory";
+   }else if(words.size() == 2){
+      //List files in directoryu words[1]
+      cout << "printing" << " " << words[1];;
+   }
 }
 
 void fn_lsr (inode_state& state, const wordvec& words){
@@ -82,11 +89,33 @@ void fn_lsr (inode_state& state, const wordvec& words){
 void fn_make (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if(words.size() == 1){
+      //Not enough arguments error
+      cout << "Not enough arguments";
+   }else if(words.size() == 2){
+      //Make an empty file names words[1]
+      cout << "Making empty file" << " " << words[1];
+   }else{
+      //Make a file name words[1] and fill it with the rest
+      cout << "Making file with" << " ";
+      for(size_t i = 2; i < words.size(); i++){
+         cout << words[i] << " ";  
+      }
+   }
+       
 }
 
 void fn_mkdir (inode_state& state, const wordvec& words){
    DEBUGF ('c', state);
    DEBUGF ('c', words);
+   if(words.size() == 1){
+      cout << "Not enough arguments";
+   }else if(words.size() == 2){
+      cout << "Making new directory named" << " " << words[1];
+   }else if(words.size() > 2){
+      cout << "Too many arguments";
+   }
+   
 }
 
 void fn_prompt (inode_state& state, const wordvec& words){
