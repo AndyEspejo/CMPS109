@@ -34,10 +34,12 @@ void scan_options (int argc, char** argv) {
    }
 }
 
+//Partially used the catfile.cpp example to implement parsing file content
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
 
+   string line
    ifstream infile;
 
    str_str_map test;
@@ -49,6 +51,12 @@ int main (int argc, char** argv) {
       if(infile.fail()){
          cerr << "Could not open file" << endl;
 
+      }else{
+         while(getLine(infile, line)){
+            strinh key;
+            string val;
+
+         }
       }
 
    }
