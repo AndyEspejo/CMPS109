@@ -25,18 +25,16 @@ ostream& operator<< (ostream& out, file_type type) {
    return out << hash[type];
 }
 
-
+//Was working on this.
 inode_state::inode_state() {
    DEBUGF ('i', "root = " << root << ", cwd = " << cwd
           << ", prompt = \"" << prompt() << "\"");
    //First we need to start off with just the root
-   //Will also be set to current directory
    inode rootDir(file_type::DIRECTORY_TYPE, "/");
    root = make_shared<inode>(rootDir);
    cwd = root;
-   //All directories be defualt should have . and ..
    rootDir.setRoot(root);
-   rootDir.setPar(root);
+   rootDir.serPar(root)
 }
 
 const string& inode_state::prompt() { return prompt_; }
@@ -47,11 +45,8 @@ ostream& operator<< (ostream& out, const inode_state& state) {
    return out;
 }
 
-//I modified this to make make it easier to work with the name of the file
-inode::inode(file_type type, string fileName): inode_nr (next_inode_nr++) {
-   name = fileName;
+inode::inode(file_type type): inode_nr (next_inode_nr++) {
    switch (type) {
-	   
       case file_type::PLAIN_TYPE:
            contents = make_shared<plain_file>();
            break;
@@ -67,44 +62,18 @@ int inode::get_inode_nr() const {
    return inode_nr;
 }
 
+
 file_error::file_error (const string& what):
             runtime_error (what) {
 }
 
-//Iterates through the ordered map from directory class in the header file
-//map has: string,inode_ptr>, so we print out the first part of the pair
-void inode_state::printDir(inode_ptr& curDir){
-	map<string,inode_ptr> currentMap = curDir->contents->getMap();
-	for(auto iter = currentMap.cbegin(); iter != currentMap.cend(); iter++){
-		cout << iter->first << endl;
-	}
-}
-
-//setRoot and setPar just set root and parent to . and .. respectivaly. 
-void inode::setRoot(inode_ptr root){
-   dynamic_pointer_cast<directory>(contents) -> newDir(string("."), root);
-}
-
-void inode::setPar(inode_ptr par){
-   dynamic_pointer_cast<directory>(contents) -> newDir(string(".."), par);
-}
-
-//mkdir and mkfile as called in commands.cpp, and then these call the functions below
-//To actually insert files/directories into the map
-inode_ptr inode::mkdir(string dirName){
-   inode_ptr newDir = dynamic_pointer_cast<directory>(contents)->mkdir(dirName);
-   newDir->setPar(make_shared<inode>(*this));
-   return newDir;
+/*inode_ptr inode::mkdir(string dirName){
+   
 }
 
 inode_ptr inode::mkfile(string fileName){
-   return dynamic_pointer_cast<directory>(contents)->mkfile(fileName);
-}
-
-void inode::writefile(const wordvec& fileContents){
-   dynamic_pointer_cast<plain_file>(contents)-> writefile(fileContents);
-}
-
+	
+} */
 
 size_t plain_file::size() const {
    size_t size {0};
@@ -118,7 +87,6 @@ const wordvec& plain_file::readfile() const {
 }
 
 void plain_file::writefile (const wordvec& words) {
-   data = words;
    DEBUGF ('i', words);
 }
 
@@ -134,16 +102,9 @@ inode_ptr plain_file::mkfile (const string&) {
    throw file_error ("is a plain file");
 }
 
-map<string,inode_ptr>& plain_file::getMap(){
-	throw file_error ("is a plain file");
-}
-
-void directory::newDir(string name, inode_ptr dir){
-	dirents.insert(pair<string, inode_ptr>(name, dir));
-}
+
 size_t directory::size() const {
    size_t size {0};
-   return size = dirents.size();
    DEBUGF ('i', "size = " << size);
    return size;
 }
@@ -159,34 +120,20 @@ void directory::writefile (const wordvec&) {
 void directory::remove (const string& filename) {
    DEBUGF ('i', filename);
 }
-
-//Makes a new inode with file type directory, as well as the shared ptr
-//Then inserts the directory into the map
+//Was working on this.
 inode_ptr directory::mkdir (const string& dirname) {
    DEBUGF ('i', dirname);
-   inode newDir (file_type::DIRECTORY_TYPE, dirname);
+   newDir = make_shared<inode>(file_type::DIRECTORY_TYPE, dirname);
    inode_ptr dirPtr = make_shared<inode>(newDir);
    
-   dirents.insert(pair<string,inode_ptr>("/" + dirname,dirPtr));
+   dirents.insert(pair<string,inode_ptr>(dirName,dirPtr);
    
    
    return dirPtr;
 }
 
-//Same as mkdir but with a normal (text) file
 inode_ptr directory::mkfile (const string& filename) {
    DEBUGF ('i', filename);
-   inode newFile(file_type::PLAIN_TYPE,filename);
-   inode_ptr filePtr = make_shared<inode>(newFile);
-   
-   dirents.insert(pair<string,inode_ptr>(filename,filePtr));
-   
-   return filePtr;  
+   return nullptr;
 }
-
-map<string,inode_ptr>& directory::getMap(){
-	return dirents;
-}
-
-
 

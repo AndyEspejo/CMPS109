@@ -42,12 +42,10 @@ class inode_state {
       inode_state& operator= (const inode_state&) = delete; // op=
       inode_state();
       const string& prompt();
-      inode_ptr getRoot() {return root;}
-	  inode_ptr getCurrent() {return cwd;}
+	  void getRoot return root;
+	  void getCurrent return cwd;
 	  void setCWD(inode_ptr);
-	  void printDir(inode_ptr&);
-	  void updatePrompt(string newPrompt){ prompt_ = newPrompt;}
-	  void setDir(inode_ptr newCWD) {cwd = newCWD;}
+	  
 };
 
 // class inode -
@@ -74,14 +72,10 @@ class inode {
       inode (file_type, string);
       int get_inode_nr() const;
 	  void setRoot(inode_ptr);
-	  void setPar(inode_ptr);
-	  string getName(){return name;};
+	  void serPar(inode_ptr);
+	  void getName return name;
 	  inode_ptr mkfile(string);
 	  inode_ptr mkdir(string);
-	  void writefile(const wordvec&);
-	  //void setDir(string, inode_ptr);
-	  //base_file_ptr getContents() {return contents;}
-	  
 };
 
 
@@ -108,8 +102,6 @@ class base_file {
       virtual void remove (const string& filename) = 0;
       virtual inode_ptr mkdir (const string& dirname) = 0;
       virtual inode_ptr mkfile (const string& filename) = 0;
-	  virtual map<string,inode_ptr>& getMap() = 0;
-	  //virtual void setDir(string, inode_ptr) = 0;
 };
 
 // class plain_file -
@@ -131,8 +123,6 @@ class plain_file: public base_file {
       virtual void remove (const string& filename) override;
       virtual inode_ptr mkdir (const string& dirname) override;
       virtual inode_ptr mkfile (const string& filename) override;
-	  //void setDir(string, inode_ptr) override;
-	  map<string,inode_ptr>& getMap() override;
 };
 
 // class directory -
@@ -164,9 +154,6 @@ class directory: public base_file {
       virtual void remove (const string& filename) override;
       virtual inode_ptr mkdir (const string& dirname) override;
       virtual inode_ptr mkfile (const string& filename) override;
-	  void newDir(string, inode_ptr);
-      map<string,inode_ptr>& getMap() override;
-	  
 };
 
 #endif
