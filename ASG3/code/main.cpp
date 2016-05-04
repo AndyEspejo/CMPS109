@@ -5,12 +5,14 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
+#include <fstream>
 
 using namespace std;
 
 #include "listmap.h"
 #include "xpair.h"
 #include "util.h"
+
 
 using str_str_map = listmap<string,string>;
 using str_str_pair = str_str_map::value_type;
@@ -36,11 +38,19 @@ int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
 
+   ifstream infile;
+
    str_str_map test;
    for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
-      str_str_pair pair (*argp, to_string<int> (argp - argv));
-      cout << "Before insert: " << pair << endl;
-      test.insert (pair);
+     // str_str_pair pair (*argp, to_string<int> (argp - argv));
+      //cout << "Before insert: " << pair << endl;
+      //test.insert (pair);
+      infile.open(*argp);
+      if(infile.fail()){
+         cerr << "Could not open file" << endl;
+
+      }
+
    }
 
    for (str_str_map::iterator itor = test.begin();
