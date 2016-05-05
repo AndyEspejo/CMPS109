@@ -38,8 +38,10 @@ void scan_options (int argc, char** argv) {
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
    scan_options (argc, argv);
-
-   string line
+   
+   string key;
+   string val;
+   string line;
    ifstream infile;
 
    str_str_map test;
@@ -52,9 +54,35 @@ int main (int argc, char** argv) {
          cerr << "Could not open file" << endl;
 
       }else{
-         while(getLine(infile, line)){
-            strinh key;
-            string val;
+         while(getline(infile, line)){
+            size_t equalsIndex = line.find_first_of("=");
+            //As long a the line is not empty or not a comment.
+            if(line.size() > 0 && line.at(0) != '#'){
+            	if(equalsIndex == string::npos){
+            	   //If no equals sign, print out value at given key
+            	   cout << line << endl;
+            	} else {
+            	
+            	   //Need to rearange logic to make printing work.
+            	   if(line.size() == 1){
+            	   //Only possible argument is the equal, which prints out whole map
+            	      cout << "Printing Map" << endl;
+            	   }else if(equalsIndex == 0){
+            	   //If equal sign is first
+            	   //then print out the keys associated with the following value
+            	   cout << "printing keys with value:" << " " << line.at(1) << endl;
+            	   }else if(equalsIndex == line.size() - 1){
+            	   //If equals sign is last, then we are deleting the preceding key
+            	   cout << "Deleting key" << endl;
+            	   }else{
+            	   //If none of the above, then key = to string before =
+            	   //and value is equal to strring after =
+            	      cout << "Setting key and value" << endl;
+            	   }
+            	}
+            	   
+            }
+            
 
          }
       }
