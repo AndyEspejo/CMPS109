@@ -42,7 +42,7 @@ listmap<Key,Value,Less>::insert (const value_type& pair) {
    TRACE ('l', &pair << "->" << pair);
    //First we check if it's currently empty
    //If it is empty, then we can just insert it.
-   if(this->begin == this->end){
+   if(this->begin() == this->end()){
       //Since it's empty, our key doesnt not exist so we make a new node
       //The first node will just have anchor as its next and prev
       node* newNode = new node(anchor(), anchor(), pair);
@@ -74,7 +74,7 @@ listmap<Key,Value,Less>::insert (const value_type& pair) {
       return newNode;
    }else{
       //If the key does exist, then all we need to do is update the value
-      findIter.second = pair.second;
+      findIter->second = pair.second;
       return findIter;
    }
    return iterator();
@@ -85,11 +85,11 @@ listmap<Key,Value,Less>::insert (const value_type& pair) {
 //
 template <typename Key, typename Value, class Less>
 typename listmap<Key,Value,Less>::iterator
-listmap<Key,Value,Less>::find (const key_type& that) const {
+listmap<Key,Value,Less>::find (const key_type& that) {
    TRACE ('l', that);
    //Just cycles through the listmap checking if the key already exists
    //if it does not exist, it just returns iterator()
-   for(node* currentNode = anchor()->next; currentNode != anchor(); currentNode = currentNode.next){
+   for(node* currentNode = anchor()->next; currentNode != anchor(); currentNode = currentNode->next){
       if(currentNode->value.first == that) return currentNode;      
    }
    return iterator();

@@ -1,4 +1,5 @@
-key=value
+=
+key=    value
 second=third
 foo=bar
 f1=51
@@ -10,4 +11,5 @@ this=is=a=test
 a=value
 b=value
 =value
+=
 # $Id: test2.in,v 1.1 2010-02-09 20:31:28-08 - - $

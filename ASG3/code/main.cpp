@@ -34,6 +34,14 @@ void scan_options (int argc, char** argv) {
    }
 }
 
+//Used to trim off the whitespace
+//Got this from http://stackoverflow.com/questions/25829143/c-trim-whitespace-from-a-string
+string trimWhitespace(string& str){
+   size_t first = str.find_first_not_of(' ');
+   size_t last = str.find_last_not_of(' ');
+   return str.substr(first, (last-first+1));
+}
+
 //Partially used the catfile.cpp example to implement parsing file content
 int main (int argc, char** argv) {
    sys_info::set_execname (argv[0]);
@@ -55,6 +63,7 @@ int main (int argc, char** argv) {
 
       }else{
          while(getline(infile, line)){
+            line = trimWhitespace(line);
             size_t equalsIndex = line.find_first_of("=");
             //As long a the line is not empty or not a comment.
             if(line.size() > 0 && line.at(0) != '#'){
@@ -65,6 +74,11 @@ int main (int argc, char** argv) {
             	} else {
             	   if(line.size() == 1){
             	   //Only possible argument is the equal, which prints out whole map
+                     cout << "Here's the whole map!" << endl;
+                     for (str_str_map::iterator itor = map.begin();
+                        itor != map.end(); ++itor) {
+                        cout <<  *itor << endl;
+                     }
             	      cout << "Printing Map" << endl;
             	   }else if(equalsIndex == 0){
             	   //If equal sign is first
@@ -79,7 +93,8 @@ int main (int argc, char** argv) {
             	   //If none of the above, then key = to string before =
             	   //and value is equal to strring after =
                      key = line.substr(0, equalsIndex);
-                     val = line.substr(equalsIndex + 1, line.size());\
+                     val = line.substr(equalsIndex + 1, line.size());
+                     val = trimWhitespace(val);
                      map.insert(str_str_pair(key, val));
 
             	      cout << key << ":" << val << endl;
@@ -94,13 +109,10 @@ int main (int argc, char** argv) {
 
    }
 
-   for (str_str_map::iterator itor = test.begin();
-        itor != test.end(); ++itor) {
-      cout << "During iteration: " << *itor << endl;
-   }
+   
 
-   str_str_map::iterator itor = test.begin();
-   test.erase (itor);
+   str_str_map::iterator itor = map.begin();
+   map.erase (itor);
 
    cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;
