@@ -79,8 +79,7 @@ int main (int argc, char** argv) {
                         itor != map.end(); ++itor) {
                         cout <<  *itor << endl;
                      }
-            	      cout << "Printing Map" << endl;
-            	   }else if(equalsIndex == 0){
+            	   }else if(equalsIndex == 0 && line.size() > 1){
             	   //If equal sign is first
             	   //then print out the keys associated with the following value
                   val = line.substr(equalsIndex + 1, line.size());
