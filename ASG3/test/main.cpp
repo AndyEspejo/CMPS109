@@ -60,7 +60,7 @@ int main (int argc, char** argv) {
       infile.open(*argp);
       if(infile.fail()){
          cerr << "Could not open file" << endl;
-         return EXIT_FAILURE;
+
       }else{
          while(getline(infile, line)){
             line = trimWhitespace(line);
@@ -70,13 +70,7 @@ int main (int argc, char** argv) {
             	if(equalsIndex == string::npos){
             	   //If no equals sign, print out value at given key
                   key = line;
-                  str_str_map::iterator iter = map.find(key);
-                  //If val = iterator then it does not exist
-                  if(iter == str_str_map::iterator()){
-            	     cout << iter->first << " : Not found" << endl;
-                  }else{
-                     cout << iter->first << " = " << iter->second << endl;
-                  }
+            	   cout << key << endl;
             	} else {
             	   if(line.size() == 1){
             	   //Only possible argument is the equal, which prints out whole map
@@ -89,17 +83,11 @@ int main (int argc, char** argv) {
             	   //If equal sign is first
             	   //then print out the keys associated with the following value
                   val = line.substr(equalsIndex + 1, line.size());
-                  //Goes through the whole map until it finds keys that have the given value
-            	   for(str_str_map::iterator iter = map.begin();
-                        iter != map.end(); ++iter){
-                     if(iter->second == val){
-                        cout << iter->first << " = " << iter->second << endl;
-                     }
-                  }
+            	   cout << "printing keys with value:" << " " << val << endl;
             	   }else if(equalsIndex == line.size() - 1){
             	   //If equals sign is last, then we are deleting the preceding key
                   key = line.substr(0, equalsIndex);
-            	   //map.erase(key);
+            	   cout << "Deleting" << " " << key << endl;
             	   }else{
             	   //If none of the above, then key = to string before =
             	   //and value is equal to strring after =
@@ -110,11 +98,21 @@ int main (int argc, char** argv) {
 
             	      cout << key << ":" << val << endl;
             	   }
-            	}	   
+            	}
+            	   
             }
+            
+
          }
       }
+
    }
+
+   
+
+   str_str_map::iterator itor = map.begin();
+   map.erase (itor);
+
    cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;
 }
