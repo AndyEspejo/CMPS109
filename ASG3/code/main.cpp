@@ -126,23 +126,15 @@ int main (int argc, char** argv) {
             //
             //As long a the line is not empty or not a comment.
             if(line.size() > 0 && line.at(0) != '#'){
-              /* if(equalsIndex == string::npos){
-                  //If no equals sign, print out value at given key
-                  key = line;
-                  str_str_map::iterator iter = map.find(key);
-                  //If iter = iterator then it does not exist
-                  if(iter == str_str_map::iterator()){
-                    cout << iter->first << " : Key not found" << endl;
-                  }else{
-                     cout << iter->first << " = " << iter->second << endl;
-                  } */
+               if(equalsIndex == string::npos){
+                  cout << "Not implemented!" << endl;
                } else {
                   if(line.size() == 1){
                   //Only possible argument is the equal, which prints out whole map
                      cout << "Here's the whole map!" << endl;
-                     for (str_str_map::iterator itor = map.begin();
-                        itor != map.end(); ++itor) {
-                        cout <<  *itor << endl;
+                     for (str_str_map::iterator iter = map.begin();
+                        iter != map.end(); ++iter) {
+                        cout <<  iter->first <<  " = " << iter->second << endl;
                      }
                   }else if(equalsIndex == 0 && line.size() > 1){
                   //If equal sign is first
