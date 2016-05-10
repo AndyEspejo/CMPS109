@@ -83,9 +83,9 @@ int main (int argc, char** argv) {
             	   if(line.size() == 1){
             	   //Only possible argument is the equal, which prints out whole map
                      cout << "Here's the whole map!" << endl;
-                     for (str_str_map::iterator itor = map.begin();
-                        itor != map.end(); ++itor) {
-                        cout <<  *itor << endl;
+                     for (str_str_map::iterator iter = map.begin();
+                        iter != map.end(); ++iter) {
+                        cout <<  iter->first <<  " = " << iter->second << endl;
                      }
             	   }else if(equalsIndex == 0 && line.size() > 1){
             	   //If equal sign is first
