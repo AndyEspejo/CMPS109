@@ -49,22 +49,24 @@ int main (int argc, char** argv) {
    
    string key;
    string val;
+   bool userInput = true;
    string line;
    ifstream infile;
 
+
    str_str_map map;
    for (char** argp = &argv[optind]; argp != &argv[argc]; ++argp) {
-     // str_str_pair pair (*argp, to_string<int> (argp - argv));
-      //cout << "Before insert: " << pair << endl;
-      //test.insert (pair);
+      userInput = false;
       infile.open(*argp);
       if(infile.fail()){
          cerr << "Could not open file" << endl;
+         cout << "EXIT_FAILURE" << endl;
          return EXIT_FAILURE;
       }else{
          while(getline(infile, line)){
             line = trimWhitespace(line);
             size_t equalsIndex = line.find_first_of("=");
+            //
             //As long a the line is not empty or not a comment.
             if(line.size() > 0 && line.at(0) != '#'){
             	if(equalsIndex == string::npos){
@@ -73,7 +75,7 @@ int main (int argc, char** argv) {
                   str_str_map::iterator iter = map.find(key);
                   //If val = iterator then it does not exist
                   if(iter == str_str_map::iterator()){
-            	     cout << iter->first << " : Not found" << endl;
+            	     cout << iter->first << " : Key not found" << endl;
                   }else{
                      cout << iter->first << " = " << iter->second << endl;
                   }
@@ -106,6 +108,7 @@ int main (int argc, char** argv) {
                      key = line.substr(0, equalsIndex);
                      val = line.substr(equalsIndex + 1, line.size());
                      val = trimWhitespace(val);
+                     key = trimWhitespace(key);
                      map.insert(str_str_pair(key, val));
 
             	      cout << key << ":" << val << endl;
@@ -115,6 +118,64 @@ int main (int argc, char** argv) {
          }
       }
    }
+   //if we did not have a file, we just do what we did above but with user input
+   if(userInput == true){
+      while(getline(cin, line)){
+            line = trimWhitespace(line);
+            size_t equalsIndex = line.find_first_of("=");
+            //
+            //As long a the line is not empty or not a comment.
+            if(line.size() > 0 && line.at(0) != '#'){
+              /* if(equalsIndex == string::npos){
+                  //If no equals sign, print out value at given key
+                  key = line;
+                  str_str_map::iterator iter = map.find(key);
+                  //If iter = iterator then it does not exist
+                  if(iter == str_str_map::iterator()){
+                    cout << iter->first << " : Key not found" << endl;
+                  }else{
+                     cout << iter->first << " = " << iter->second << endl;
+                  } */
+               } else {
+                  if(line.size() == 1){
+                  //Only possible argument is the equal, which prints out whole map
+                     cout << "Here's the whole map!" << endl;
+                     for (str_str_map::iterator itor = map.begin();
+                        itor != map.end(); ++itor) {
+                        cout <<  *itor << endl;
+                     }
+                  }else if(equalsIndex == 0 && line.size() > 1){
+                  //If equal sign is first
+                  //then print out the keys associated with the following value
+                  val = line.substr(equalsIndex + 1, line.size());
+                  //Goes through the whole map until it finds keys that have the given value
+                  for(str_str_map::iterator iter = map.begin();
+                        iter != map.end(); ++iter){
+                     if(iter->second == val){
+                        cout << iter->first << " = " << iter->second << endl;
+                     }
+                  }
+                  }else if(equalsIndex == line.size() - 1){
+                  //If equals sign is last, then we are deleting the preceding key
+                  key = line.substr(0, equalsIndex);
+                  //map.erase(key);
+                  }else{
+                  //If none of the above, then key = to string before =
+                  //and value is equal to strring after =
+                     key = line.substr(0, equalsIndex);
+                     val = line.substr(equalsIndex + 1, line.size());
+                     key = trimWhitespace(key);
+                     val = trimWhitespace(val);
+                     map.insert(str_str_pair(key, val));
+
+                     cout << key << ":" << val << endl;
+                  }
+               }     
+            }
+         }
+
+   }
+
    cout << "EXIT_SUCCESS" << endl;
    return EXIT_SUCCESS;
 }

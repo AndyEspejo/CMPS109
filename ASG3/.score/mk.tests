@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/csh
 # $Id: mk.tests,v 1.6 2015-01-30 14:29:49-08 - - $
 ./keyvalue <test1.in >run1.stdin 2>&1
 ./keyvalue <test2.in >run2.stdin 2>&1
