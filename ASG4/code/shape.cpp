@@ -6,6 +6,10 @@ using namespace std;
 
 #include "shape.h"
 #include "util.h"
+#include <GL/glut.h>
+#include <math.h>
+typedef float GLfloat;
+typedef int GLint;
 
 static unordered_map<void*,string> fontname {
    {GLUT_BITMAP_8_BY_13       , "Fixed-8x13"    },
@@ -43,10 +47,12 @@ text::text (void* glut_bitmap_font, const string& textdata):
 
 ellipse::ellipse (GLfloat width, GLfloat height):
 dimension ({width, height}) {
+
    DEBUGF ('c', this);
 }
 
 circle::circle (GLfloat diameter): ellipse (diameter, diameter) {
+  cout << "Drawing Cirle" << diameter << endl;
    DEBUGF ('c', this);
 }
 
@@ -65,14 +71,45 @@ square::square (GLfloat width): rectangle (width, width) {
 }
 
 void text::draw (const vertex& center, const rgbcolor& color) const {
+  rgbcolor textColor;
+  textColor = color;
+
+  glColor3ubv(textColor.ubvec);
+  glRasterPos2f(center.xpos, center.ypos);
+  glutBitmapString(glut_bitmap_font,
+    reinterpret_cast<const GLubyte*> (textdata.c_str()));
+  //glutSwapBuffers();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
 void ellipse::draw (const vertex& center, const rgbcolor& color) const {
+  const float DEG2RAD = 3.14159/180.0;
+
+  glBegin(GL_LINE_LOOP);
+  glColor3ubv(color.ubvec);
+  float w = dimension.xpos;
+  float h = dimension.ypos;
+  //Modified code from the OpenGL forums
+  //https://goo.gl/x5Zpo1
+  for(int i = 0; i < 360; i++){
+    float rad = i*DEG2RAD;
+    glVertex2f(cos(rad)*w*100.0f+200.0f,
+      sin(rad)*h*100.0f+200.0f);
+  }
+  glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
 void polygon::draw (const vertex& center, const rgbcolor& color) const {
+
+  vertex_list polyVertex = vertices;
+
+  glBegin(GL_POLYGON);
+  glColor3ubv(color.ubvec);
+  for(size_t i = 0; i < polyVertex.size(); i++){
+    glVertex2f(polyVertex.at(i).xpos, polyVertex.at(i).ypos);
+  }
+  glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
@@ -100,4 +137,3 @@ ostream& operator<< (ostream& out, const shape& obj) {
    obj.show (out);
    return out;
 }
-

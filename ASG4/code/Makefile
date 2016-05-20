@@ -8,7 +8,7 @@ GMAKE       = ${MAKE} --no-print-directory
 COMPILECPP  = g++ -g -O0 -Wall -Wextra -std=gnu++14
 MAKEDEPCPP  = g++ -MM -std=gnu++14
 
-MODULES     = debug graphics interp rgbcolor shape util main
+MODULES     = graphics interp rgbcolor shape util main
 CPPHEADER   = $(wildcard ${MODULES:=.h})
 CPPSOURCE   = $(wildcard ${MODULES:=.cpp})
 TCCFILES    = $(wildcard ${MODULES:=.tcc})
@@ -26,7 +26,7 @@ CLASS       = cmps109-wm.w15
 PROJECT     = asg3
 
 all : ${EXECBIN}
-	- checksource ${ALLSOURCES}
+	- ${ALLSOURCES}
 
 echo :
 	- echo ${ALLSOURCES}
@@ -72,4 +72,3 @@ again :
 ifeq (${NEEDINCL}, )
 include ${DEPFILE}
 endif
-
