@@ -66,6 +66,7 @@ void interpreter::do_draw (param begin, param end) {
    vertex where {from_string<GLfloat> (begin[2]),
                  from_string<GLfloat> (begin[3])};
    itor->second->draw(where, color);
+   window::push_back(object(itor->second, where, color));
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {
@@ -119,6 +120,7 @@ shape_ptr interpreter::make_polygon (param begin, param end) {
 //Need to add error output
 shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   cout << "rectangle" << endl;
 
      return make_shared<rectangle> (from_string<GLfloat>(*begin),
             from_string<GLfloat>(*(--end)));

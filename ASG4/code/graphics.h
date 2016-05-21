@@ -19,6 +19,12 @@ class object {
       rgbcolor color;
    public:
       // Default copiers, movers, dtor all OK.
+
+      //Added constructor bellow to allow me to create object
+      //Is used when adding to window to draw
+      object(shared_ptr<shape> sp, vertex cen,
+           rgbcolor col): pshape(sp),
+           center(cen), color(col) {}
       void draw() { pshape->draw (center, color); }
       void move (GLfloat delta_x, GLfloat delta_y) {
          center.xpos += delta_x;

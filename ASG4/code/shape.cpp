@@ -83,18 +83,19 @@ void text::draw (const vertex& center, const rgbcolor& color) const {
 }
 
 void ellipse::draw (const vertex& center, const rgbcolor& color) const {
-  const float DEG2RAD = 3.14159/180.0;
+
 
   glBegin(GL_LINE_LOOP);
   glColor3ubv(color.ubvec);
+  const float DEG2RAD = 3.14159/180.0;
   float w = dimension.xpos;
   float h = dimension.ypos;
   //Modified code from the OpenGL forums
   //https://goo.gl/x5Zpo1
   for(int i = 0; i < 360; i++){
     float rad = i*DEG2RAD;
-    glVertex2f(cos(rad)*w*100.0f+200.0f,
-      sin(rad)*h*100.0f+200.0f);
+    glVertex2f(cos(rad)*w + center.xpos,
+      sin(rad)*h + center.xpos);
   }
   glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
