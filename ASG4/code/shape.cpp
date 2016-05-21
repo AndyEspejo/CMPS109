@@ -61,9 +61,16 @@ polygon::polygon (const vertex_list& vertices): vertices(vertices) {
    DEBUGF ('c', this);
 }
 
-rectangle::rectangle (GLfloat width, GLfloat height):
-            polygon({}) {
-   DEBUGF ('c', this << "(" << width << "," << height << ")");
+rectangle::rectangle (GLfloat w, GLfloat h):
+            polygon({
+              {-w/2, h/2},
+              {w/2, h/2},
+              {w/2, -h/2},
+              {-w/2,-h/2}
+            }) {
+
+
+   DEBUGF ('c', this << "(" << w << "," << h << ")");
 }
 
 square::square (GLfloat width): rectangle (width, width) {
@@ -103,12 +110,14 @@ void ellipse::draw (const vertex& center, const rgbcolor& color) const {
 
 void polygon::draw (const vertex& center, const rgbcolor& color) const {
 
-  vertex_list polyVertex = vertices;
-
   glBegin(GL_POLYGON);
+  glEnable(GL_LINE_SMOOTH);
   glColor3ubv(color.ubvec);
-  for(size_t i = 0; i < polyVertex.size(); i++){
-    glVertex2f(polyVertex.at(i).xpos, polyVertex.at(i).ypos);
+  for(auto& iter: vertices){
+    vertex coordVert;
+    coordVert = iter;
+    glVertex2f(coordVert.xpos + center.xpos,
+      coordVert.ypos + center.ypos);
   }
   glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
