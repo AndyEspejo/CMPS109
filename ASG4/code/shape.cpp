@@ -52,7 +52,6 @@ dimension ({width, height}) {
 }
 
 circle::circle (GLfloat diameter): ellipse (diameter, diameter) {
-  cout << "Drawing Cirle" << diameter << endl;
    DEBUGF ('c', this);
 }
 
@@ -76,6 +75,29 @@ rectangle::rectangle (GLfloat w, GLfloat h):
 square::square (GLfloat width): rectangle (width, width) {
    DEBUGF ('c', this);
 }
+
+diamond::diamond ( GLfloat w, GLfloat h):
+  polygon({
+    {0, h/2},
+    {w/2, 0},
+    {0, -h/2},
+    {-w/2, 0}
+  }) {
+}
+
+triangle::triangle(const vertex_list& vertices): polygon(vertices){
+
+}
+
+equilateral::equilateral(GLfloat w):
+  triangle({
+      {0, w/2},
+      {w/2, -w/2},
+      {-w/2, -w/2}
+  }){
+
+}
+
 
 void text::draw (const vertex& center, const rgbcolor& color) const {
   rgbcolor textColor;

@@ -2,9 +2,9 @@
 # Some rectilinear symbols
 define rect rectangle 100 50
 define squ square 75
-define card diamond 50 100
+define card diamond 100 100
 define tri triangle 0 0 100 50 0 60
-define equi equilateral 100 
+define equi equilateral 100
 draw cyan rect 100 100
 draw cyan squ 200 100
 draw cyan card 300 100

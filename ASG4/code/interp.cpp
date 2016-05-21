@@ -26,6 +26,9 @@ interpreter::factory_map {
    {"polygon"  , &interpreter::make_polygon  },
    {"rectangle", &interpreter::make_rectangle},
    {"square"   , &interpreter::make_square   },
+   {"diamond"  , &interpreter::make_diamond  },
+   {"triangle" , &interpreter::make_triangle },
+   {"equilateral" , &interpreter::make_equilateral},
 };
 
 interpreter::shape_map interpreter::objmap;
@@ -60,13 +63,14 @@ void interpreter::do_draw (param begin, param end) {
    string name = begin[1];
    shape_map::const_iterator itor = objmap.find (name);
    if (itor == objmap.end()) {
-      throw runtime_error (name + ": no such shape");
-   }
-   rgbcolor color {begin[0]};
-   vertex where {from_string<GLfloat> (begin[2]),
+      cerr << (name + ": no such shape") << endl;
+   }else{
+     rgbcolor color {begin[0]};
+     vertex where {from_string<GLfloat> (begin[2]),
                  from_string<GLfloat> (begin[3])};
 
-   window::push_back(object(itor->second, where, color));
+      window::push_back(object(itor->second, where, color));
+    }
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {
@@ -120,13 +124,7 @@ shape_ptr interpreter::make_polygon (param begin, param end) {
 //Need to add error output
 shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   //cout << "rectangle" << endl;
-   //const float w = from_string<GLfloat>(*begin);
-   //begin++;
-   //const float h = from_string<GLfloat>(*begin);
-   //cout << w << " " << h << endl;
-
-     return make_shared<rectangle> (from_string<GLfloat>(*begin),
+   return make_shared<rectangle> (from_string<GLfloat>(*begin),
         from_string<GLfloat>(*(--end)));
 }
 
@@ -134,4 +132,31 @@ shape_ptr interpreter::make_square (param begin, param end) {
    DEBUGF ('f', range (begin, end));
 
    return make_shared<square> (from_string<GLfloat>(*begin));
+}
+
+shape_ptr interpreter::make_diamond (param begin, param end){
+  return make_shared<diamond> (from_string<GLfloat>(*begin),
+       from_string<GLfloat>(*(--end)));
+}
+
+shape_ptr interpreter::make_triangle (param begin, param end){
+  vertex_list coordVert;
+  vertex xyVect;
+  param prev = begin;
+  param next = begin + 1;
+  while(next < end){
+    GLfloat x(from_string<GLfloat>(*prev));
+    xyVect.xpos = x;
+    GLfloat y(from_string<GLfloat>(*next));
+    xyVect.ypos = y;
+    coordVert.push_back(xyVect);
+    prev += 2;
+    next += 2;
+  }
+  return make_shared<triangle> (coordVert);
+
+}
+
+shape_ptr interpreter::make_equilateral (param begin, param end){
+  return make_shared<equilateral> (from_string<GLfloat>(*begin));
 }
