@@ -65,7 +65,7 @@ void interpreter::do_draw (param begin, param end) {
    rgbcolor color {begin[0]};
    vertex where {from_string<GLfloat> (begin[2]),
                  from_string<GLfloat> (begin[3])};
-   itor->second->draw (where, color);
+   itor->second->draw(where, color);
 }
 
 shape_ptr interpreter::make_shape (param begin, param end) {
@@ -81,6 +81,7 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+
    return make_shared<text> (nullptr, string());
 }
 
@@ -95,17 +96,36 @@ shape_ptr interpreter::make_circle (param begin, param end) {
    return make_shared<circle> (from_string<GLfloat>(*begin));
 }
 
+//Need to modify this part with better var names
 shape_ptr interpreter::make_polygon (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<polygon> (vertex_list());
+
+   vertex_list coordVert;
+   vertex xyVect;
+   param prev = begin;
+   param next = begin++;
+   while(next != end){
+     GLfloat x(from_string<GLfloat>(*prev));
+     xyVect.xpos = x;
+     GLfloat y(from_string<GLfloat>(*next));
+     xyVect.ypos = y;
+     coordVert.push_back(xyVect);
+     prev += 2;
+     next += 2;
+   }
+   return make_shared<polygon> (coordVert);
 }
 
+//Need to add error output
 shape_ptr interpreter::make_rectangle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<rectangle> (GLfloat(), GLfloat());
+
+     return make_shared<rectangle> (from_string<GLfloat>(*begin),
+            from_string<GLfloat>(*(--end)));
 }
 
 shape_ptr interpreter::make_square (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-   return make_shared<square> (GLfloat());
+
+   return make_shared<square> (from_string<GLfloat>(*begin));
 }
