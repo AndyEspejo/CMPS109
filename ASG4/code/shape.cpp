@@ -124,7 +124,7 @@ void ellipse::draw (const vertex& center, const rgbcolor& color) const {
   for(int i = 0; i < 360; i++){
     float rad = i*DEG2RAD;
     glVertex2f(cos(rad)*w + center.xpos,
-      sin(rad)*h + center.xpos);
+      sin(rad)*h + center.ypos);
   }
   glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
