@@ -37,7 +37,9 @@ void parsefile (const string& infilename, istream& infile) {
             line += contin;
          }
          interpreter::parameters words = split (line, " \t");
-         if (words.size() == 0 or words.front()[0] == '#') continue;
+         if (words.size() == 0 or words.front()[0] == '#'
+              or words.front() == "moveby"
+              or words.front() == "border") continue;
          DEBUGF ('m', words);
          interp.interpret (words);
       }catch (runtime_error error) {

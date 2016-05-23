@@ -35,7 +35,10 @@ void window::entry (int mouse_entered) {
 // Called to display the objects in the window.
 void window::display() {
    glClear (GL_COLOR_BUFFER_BIT);
-   for (auto& object: window::objects) object.draw();
+
+   for (auto& object: window::objects){
+     object.draw();
+    }
    mus.draw();
    glutSwapBuffers();
 }
@@ -65,23 +68,25 @@ void window::keyboard (GLubyte key, int x, int y) {
          window::close();
          break;
       case 'H': case 'h':
-         //move_selected_object (
+         move_selected_object (-1, 0);
          break;
       case 'J': case 'j':
-         //move_selected_object (
+         move_selected_object (0, -1);
          break;
       case 'K': case 'k':
-         //move_selected_object (
+         move_selected_object (0, +1);
          break;
       case 'L': case 'l':
-         //move_selected_object (
+         move_selected_object (+1, 0);
          break;
       case 'N': case 'n': case SPACE: case TAB:
+         select_object(selected_obj + 1);
          break;
       case 'P': case 'p': case BS:
+         select_object(selected_obj - 1);
          break;
       case '0'...'9':
-         //select_object (key - '0');
+         select_object (key - '0');
          break;
       default:
          cerr << (unsigned)key << ": invalid keystroke" << endl;
@@ -96,22 +101,22 @@ void window::special (int key, int x, int y) {
    DEBUGF ('g', "key=" << key << ", x=" << x << ", y=" << y);
    window::mus.set (x, y);
    switch (key) {
-      case GLUT_KEY_LEFT: //move_selected_object (-1, 0); break;
-      case GLUT_KEY_DOWN: //move_selected_object (0, -1); break;
-      case GLUT_KEY_UP: //move_selected_object (0, +1); break;
-      case GLUT_KEY_RIGHT: //move_selected_object (+1, 0); break;
-      case GLUT_KEY_F1: //select_object (1); break;
-      case GLUT_KEY_F2: //select_object (2); break;
-      case GLUT_KEY_F3: //select_object (3); break;
-      case GLUT_KEY_F4: //select_object (4); break;
-      case GLUT_KEY_F5: //select_object (5); break;
-      case GLUT_KEY_F6: //select_object (6); break;
-      case GLUT_KEY_F7: //select_object (7); break;
-      case GLUT_KEY_F8: //select_object (8); break;
-      case GLUT_KEY_F9: //select_object (9); break;
-      case GLUT_KEY_F10: //select_object (10); break;
-      case GLUT_KEY_F11: //select_object (11); break;
-      case GLUT_KEY_F12: //select_object (12); break;
+      case GLUT_KEY_LEFT: move_selected_object (-1, 0); break;
+      case GLUT_KEY_DOWN: move_selected_object (0, -1); break;
+      case GLUT_KEY_UP: move_selected_object (0, +1); break;
+      case GLUT_KEY_RIGHT: move_selected_object (+1, 0); break;
+      case GLUT_KEY_F1:  select_object (1); break;
+      case GLUT_KEY_F2:  select_object (2); break;
+      case GLUT_KEY_F3:  select_object (3); break;
+      case GLUT_KEY_F4:  select_object (4); break;
+      case GLUT_KEY_F5:  select_object (5); break;
+      case GLUT_KEY_F6:  select_object (6); break;
+      case GLUT_KEY_F7:  select_object (7); break;
+      case GLUT_KEY_F8:  select_object (8); break;
+      case GLUT_KEY_F9:  select_object (9); break;
+      case GLUT_KEY_F10: select_object (10); break;
+      case GLUT_KEY_F11: select_object (11); break;
+      case GLUT_KEY_F12: select_object (12); break;
       default:
          cerr << (unsigned)key << ": invalid function key" << endl;
          break;
@@ -119,6 +124,18 @@ void window::special (int key, int x, int y) {
    glutPostRedisplay();
 }
 
+void window::select_object(size_t objToSelect){
+  if(objToSelect > objects.size() - 1){
+    cerr << "Object " << objToSelect << " does not exist" << endl;
+  }else{
+    cout << "Selected " << objToSelect << endl;
+    selected_obj = objToSelect;
+  }
+}
+
+void window::move_selected_object(int x, int y){
+  objects.at(selected_obj).move(x,y);
+}
 
 void window::motion (int x, int y) {
    DEBUGF ('g', "x=" << x << ", y=" << y);
@@ -173,9 +190,9 @@ void mouse::draw() {
    static rgbcolor color ("green");
    ostringstream text;
    text << "(" << xpos << "," << window::height - ypos << ")";
-   if (left_state == GLUT_DOWN) text << "L"; 
-   if (middle_state == GLUT_DOWN) text << "M"; 
-   if (right_state == GLUT_DOWN) text << "R"; 
+   if (left_state == GLUT_DOWN) text << "L";
+   if (middle_state == GLUT_DOWN) text << "M";
+   if (right_state == GLUT_DOWN) text << "R";
    if (entered == GLUT_ENTERED) {
       void* font = GLUT_BITMAP_HELVETICA_18;
       glColor3ubv (color.ubvec);
@@ -183,4 +200,3 @@ void mouse::draw() {
       glutBitmapString (font, (GLubyte*) text.str().c_str());
    }
 }
-

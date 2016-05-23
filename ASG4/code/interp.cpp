@@ -29,6 +29,8 @@ interpreter::factory_map {
    {"diamond"  , &interpreter::make_diamond  },
    {"triangle" , &interpreter::make_triangle },
    {"equilateral" , &interpreter::make_equilateral},
+   //{"moveby"    , &interpreter::moveby},
+   //{"changeBorder" , &interpreter::changeBorder},
 };
 
 static unordered_map<string,void*> fontcode {
@@ -82,6 +84,14 @@ void interpreter::do_draw (param begin, param end) {
       window::push_back(object(itor->second, where, color));
     }
 }
+
+//void interpreter::moveby(param begin, param end){
+//
+//}
+
+//void interpreter::changeBorder(param begin, param end){
+//
+//}
 
 shape_ptr interpreter::make_shape (param begin, param end) {
    DEBUGF ('f', range (begin, end));
@@ -175,5 +185,6 @@ shape_ptr interpreter::make_triangle (param begin, param end){
 }
 
 shape_ptr interpreter::make_equilateral (param begin, param end){
+   DEBUGF ('f', range (begin, end));
   return make_shared<equilateral> (from_string<GLfloat>(*begin));
 }
