@@ -31,6 +31,16 @@ interpreter::factory_map {
    {"equilateral" , &interpreter::make_equilateral},
 };
 
+static unordered_map<string,void*> fontcode {
+   {"Fixed-8x13"    , GLUT_BITMAP_8_BY_13       },
+   {"Fixed-9x15"    , GLUT_BITMAP_9_BY_15       },
+   {"Helvetica-10"  , GLUT_BITMAP_HELVETICA_10  },
+   {"Helvetica-12"  , GLUT_BITMAP_HELVETICA_12  },
+   {"Helvetica-18"  , GLUT_BITMAP_HELVETICA_18  },
+   {"Times-Roman-10", GLUT_BITMAP_TIMES_ROMAN_10},
+   {"Times-Roman-24", GLUT_BITMAP_TIMES_ROMAN_24},
+};
+
 interpreter::shape_map interpreter::objmap;
 
 interpreter::~interpreter() {
@@ -86,8 +96,15 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   string textToDraw;
+   auto font = fontcode.find(*begin++)->second;
+   while(begin != end){
+     textToDraw = textToDraw + *begin + " ";\
+     begin++;
+   }
 
-   return make_shared<text> (nullptr, string());
+
+   return make_shared<text> (font, textToDraw);
 }
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
