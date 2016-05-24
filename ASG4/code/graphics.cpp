@@ -67,22 +67,22 @@ void window::keyboard (GLubyte key, int x, int y) {
       case 'Q': case 'q': case ESC:
          window::close();
          break;
-      case 'H': case 'h':
-         move_selected_object (-1, 0);
+      case 'H': case 'h': //left
+         move_selected_object (-4, 0);
          break;
-      case 'J': case 'j':
-         move_selected_object (0, -1);
+      case 'J': case 'j': //down
+         move_selected_object (0, -4);
          break;
-      case 'K': case 'k':
-         move_selected_object (0, +1);
+      case 'K': case 'k': //up
+         move_selected_object (0, +4);
          break;
-      case 'L': case 'l':
-         move_selected_object (+1, 0);
+      case 'L': case 'l': //right
+         move_selected_object (+4, 0);
          break;
-      case 'N': case 'n': case SPACE: case TAB:
+      case 'N': case 'n': case SPACE: case TAB: //next
          select_object(selected_obj + 1);
          break;
-      case 'P': case 'p': case BS:
+      case 'P': case 'p': case BS: //prev
          select_object(selected_obj - 1);
          break;
       case '0'...'9':
@@ -101,10 +101,10 @@ void window::special (int key, int x, int y) {
    DEBUGF ('g', "key=" << key << ", x=" << x << ", y=" << y);
    window::mus.set (x, y);
    switch (key) {
-      case GLUT_KEY_LEFT: move_selected_object (-1, 0); break;
-      case GLUT_KEY_DOWN: move_selected_object (0, -1); break;
-      case GLUT_KEY_UP: move_selected_object (0, +1); break;
-      case GLUT_KEY_RIGHT: move_selected_object (+1, 0); break;
+      case GLUT_KEY_LEFT: move_selected_object (-4, 0); break;
+      case GLUT_KEY_DOWN: move_selected_object (0, -4); break;
+      case GLUT_KEY_UP: move_selected_object (0, +4); break;
+      case GLUT_KEY_RIGHT: move_selected_object (+4, 0); break;
       case GLUT_KEY_F1:  select_object (1); break;
       case GLUT_KEY_F2:  select_object (2); break;
       case GLUT_KEY_F3:  select_object (3); break;
@@ -125,15 +125,20 @@ void window::special (int key, int x, int y) {
 }
 
 void window::select_object(size_t objToSelect){
+  //Selects object if it exist
+  //If it doesnt, it does nothing
   if(objToSelect > objects.size() - 1){
     cerr << "Object " << objToSelect << " does not exist" << endl;
   }else{
     cout << "Selected " << objToSelect << endl;
     selected_obj = objToSelect;
+
   }
 }
 
 void window::move_selected_object(int x, int y){
+  //Simply moves object by x/y depending on keystroke
+  //currently defaults to 4 pixels per keystroke
   objects.at(selected_obj).move(x,y);
 }
 

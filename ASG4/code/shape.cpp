@@ -62,6 +62,7 @@ polygon::polygon (const vertex_list& vertices): vertices(vertices) {
 
 rectangle::rectangle (GLfloat w, GLfloat h):
             polygon({
+              //{x, y} coordinates
               {-w/2, h/2},
               {w/2, h/2},
               {w/2, -h/2},
@@ -73,11 +74,18 @@ rectangle::rectangle (GLfloat w, GLfloat h):
 }
 
 square::square (GLfloat width): rectangle (width, width) {
+  /*No calculations are needed since squares
+  are rectangles with equal sides
+  */
    DEBUGF ('c', this);
+
+
 }
 
 diamond::diamond ( GLfloat w, GLfloat h):
   polygon({
+    //Diamonds squares rotated 45 degrees,
+    //Essentially what this does.
     {0, h/2},
     {w/2, 0},
     {0, -h/2},
@@ -86,11 +94,13 @@ diamond::diamond ( GLfloat w, GLfloat h):
 }
 
 triangle::triangle(const vertex_list& vertices): polygon(vertices){
-
+  //Triangles are just 3 sided polygons
 }
 
 equilateral::equilateral(GLfloat w):
   triangle({
+      //Equilaterals aree 3 sided polygons with equal sides
+      //3 vertices are just same distance from eachother
       {0, w/2},
       {w/2, -w/2},
       {-w/2, -w/2}
@@ -100,14 +110,11 @@ equilateral::equilateral(GLfloat w):
 
 
 void text::draw (const vertex& center, const rgbcolor& color) const {
-  rgbcolor textColor;
-  textColor = color;
-
-  glColor3ubv(textColor.ubvec);
+  glColor3ubv(color.ubvec);
   glRasterPos2f(center.xpos, center.ypos);
   glutBitmapString(glut_bitmap_font,
-    reinterpret_cast<const GLubyte*> (textdata.c_str()));
-  //glutSwapBuffers();
+    reinterpret_cast<const GLubyte*>(textdata.c_str()));
+
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }
 
@@ -135,12 +142,12 @@ void polygon::draw (const vertex& center, const rgbcolor& color) const {
   glBegin(GL_POLYGON);
   glEnable(GL_LINE_SMOOTH);
   glColor3ubv(color.ubvec);
+  //just cycle through vertices drawing lines in between them
   for(auto& iter: vertices){
-    vertex coordVert;
-    coordVert = iter;
-    glVertex2f(coordVert.xpos + center.xpos,
-      coordVert.ypos + center.ypos);
-  }
+    //Adding center makes sure it's drawn in the correct locations
+    glVertex2f(iter.xpos + center.xpos,
+      iter.ypos + center.ypos);
+    }
   glEnd();
    DEBUGF ('d', this << "(" << center << "," << color << ")");
 }

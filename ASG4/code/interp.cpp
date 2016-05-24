@@ -80,7 +80,7 @@ void interpreter::do_draw (param begin, param end) {
      rgbcolor color {begin[0]};
      vertex where {from_string<GLfloat> (begin[2]),
                  from_string<GLfloat> (begin[3])};
-
+     //Pushes objects to be drawn
       window::push_back(object(itor->second, where, color));
     }
 }
@@ -107,67 +107,78 @@ shape_ptr interpreter::make_shape (param begin, param end) {
 shape_ptr interpreter::make_text (param begin, param end) {
    DEBUGF ('f', range (begin, end));
    string textToDraw;
+   /*Find font, then grabs the second thing since
+   that is where font type is
+   */
    auto font = fontcode.find(*begin++)->second;
+   //Adds all words into one string
    while(begin != end){
      textToDraw = textToDraw + *begin + " ";\
      begin++;
    }
-
-
    return make_shared<text> (font, textToDraw);
 }
 
 shape_ptr interpreter::make_ellipse (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   //Only width and height are given so that's all we need
    return make_shared<ellipse> (from_string<GLfloat>(*begin),
           from_string<GLfloat>(*(--end)));
 }
 
 shape_ptr interpreter::make_circle (param begin, param end) {
    DEBUGF ('f', range (begin, end));
+   //Same as ellipse but only one value needed
    return make_shared<circle> (from_string<GLfloat>(*begin));
 }
 
-//Need to modify this part with better var names
 shape_ptr interpreter::make_polygon (param begin, param end) {
    DEBUGF ('f', range (begin, end));
 
-   vertex_list coordVert;
+   vertex_list polyVert;
    vertex xyVect;
    param prev = begin;
    param next = begin + 1;
    while(next < end){
+     //Odd indexes are x values
+     //Even indexes are y values
+     //Then a vertex of pairs is made
      GLfloat x(from_string<GLfloat>(*prev));
      xyVect.xpos = x;
      GLfloat y(from_string<GLfloat>(*next));
      xyVect.ypos = y;
-     coordVert.push_back(xyVect);
+     polyVert.push_back(xyVect);
      prev += 2;
      next += 2;
    }
-   return make_shared<polygon> (coordVert);
+   return make_shared<polygon> (polyVert);
 }
 
 //Need to add error output
-shape_ptr interpreter::make_rectangle (param begin, param end) {
+shape_ptr interpreter::make_rectangle (param begin, param end){
    DEBUGF ('f', range (begin, end));
+   /*Since widht and height are give
+    we can calculate coordinates in shape.cpp
+    */
    return make_shared<rectangle> (from_string<GLfloat>(*begin),
         from_string<GLfloat>(*(--end)));
 }
 
 shape_ptr interpreter::make_square (param begin, param end) {
    DEBUGF ('f', range (begin, end));
-
+   //Same as rectangle
    return make_shared<square> (from_string<GLfloat>(*begin));
 }
 
 shape_ptr interpreter::make_diamond (param begin, param end){
+  //Same as square
   return make_shared<diamond> (from_string<GLfloat>(*begin),
        from_string<GLfloat>(*(--end)));
 }
 
 shape_ptr interpreter::make_triangle (param begin, param end){
-  vertex_list coordVert;
+  //Basically same as rectangle since this is just a polygon
+  vertex_list triVert;
   vertex xyVect;
   param prev = begin;
   param next = begin + 1;
@@ -176,15 +187,17 @@ shape_ptr interpreter::make_triangle (param begin, param end){
     xyVect.xpos = x;
     GLfloat y(from_string<GLfloat>(*next));
     xyVect.ypos = y;
-    coordVert.push_back(xyVect);
+    triVert.push_back(xyVect);
     prev += 2;
     next += 2;
   }
-  return make_shared<triangle> (coordVert);
+  return make_shared<triangle> (triVert);
 
 }
 
 shape_ptr interpreter::make_equilateral (param begin, param end){
    DEBUGF ('f', range (begin, end));
+   //Same as squares with rectangles
+   //Able to calculate based on widht from triangles
   return make_shared<equilateral> (from_string<GLfloat>(*begin));
 }
